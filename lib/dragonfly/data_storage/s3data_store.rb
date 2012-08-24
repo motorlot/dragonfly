@@ -157,7 +157,10 @@ module Dragonfly
 
       def rescuing_socket_errors(&block)
         yield
-      rescue [Excon::Errors::SocketError, Excon::Errors::Forbidden] => e
+      rescue Excon::Errors::SocketError => e
+        storage.reload
+        yield
+      rescue Excon::Errors::Forbidden => e
         storage.reload
         yield
       end
